@@ -1,56 +1,63 @@
 //const request = require('request');
 
+require("es6-promise").polyfill();
+require("isomorphic-fetch");
 
-
-require('es6-promise').polyfill();
-require('isomorphic-fetch');
-
-
-
-function responseToResult(res, data, status) {
+function responseToResult(res, data, status, statusCode) {
+  res.statusCode = statusCode || 200;
   res.json({
     status: status || 0,
     data,
-    message: 'ok',
-  })
+    message: "ok"
+  });
 }
-function responseToErr(res, error) {
+function responseToErr(res, error, statusCode) {
+  res.statusCode = statusCode || 200;
   res.json({
     message: error.message,
-    status: -1,
+    status: -1
   });
 }
 
 function executeRequest(url, options) {
   options.json = options.json || true;
-  return new Promise(function (resolve, reject) {
-
+  return new Promise(function(resolve, reject) {
     let body = options.form;
-    if (options.headers && options.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+    if (
+      options.headers &&
+      options.headers["Content-Type"] === "application/x-www-form-urlencoded"
+    ) {
       const urlEncodedrequest = [];
       for (const key in body) {
         urlEncodedrequest.push(`${key}=${encodeURIComponent(body[key])}`);
       }
-      const requestForm = urlEncodedrequest.reduce((pre, cur) => `${pre}&${cur}`);
+      const requestForm = urlEncodedrequest.reduce(
+        (pre, cur) => `${pre}&${cur}`
+      );
       body = requestForm;
     } else {
       body = JSON.stringify(body);
     }
-    console.warn('body', body);
-    console.warn('url', url);
-    console.warn('headers', options.headers);
+    console.warn("body", body);
+    console.warn("url", url);
+    console.warn("headers", options.headers);
     fetch(url, {
-      method: options.method || 'POST',
+      method: options.method || "POST",
       headers: options.headers,
-      body: options.method === 'GET' ? null : body,
-    }).then((response) => {
-      return options.json ? response.json() : response.text();
-    }, (err) => {
-      console.warn('err', err);
-      reject(err);
-    }).then(jsonResponse => {
-      resolve(jsonResponse);
-    });
+      body: options.method === "GET" ? null : body
+    })
+      .then(
+        response => {
+          return options.json ? response.json() : response.text();
+        },
+        err => {
+          console.warn("err", err);
+          reject(err);
+        }
+      )
+      .then(jsonResponse => {
+        resolve(jsonResponse);
+      });
     /*request.post({ 
       url, 
       form: options.form, 
@@ -65,13 +72,12 @@ function executeRequest(url, options) {
       }
     });*/
   });
-};
-
+}
 
 module.exports = {
   executeRequest,
   responseToResult,
   responseToErr,
-  OK: 'ok',
-  FAIL: 'fail',
-}
+  OK: "ok",
+  FAIL: "fail"
+};

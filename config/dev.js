@@ -7,6 +7,5 @@ module.exports = {
       database: "<Your database name>"
     }
   },
-  MONGODB_URI:
-    process.env.MONGODB_URI || "mongodb://localhost:27017/node-swagger-template"
+  MONGODB_URI: process.env.MONGODB_URI || "mongodb://localhost:27017/live-talk"
 };
