@@ -1,6 +1,6 @@
 # LiveTalkServer
 
-* Demostrate how to integrate with nginx-rtmp and own your room_list for list available rtmp-streams
+* Demostrate how to integrate with nginx-rtmp and own your publisher list for playing available rtmp-streams
 
 ## Requirement
 
